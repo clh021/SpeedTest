@@ -39,10 +39,7 @@ bool ParseOptions(const int argc, const char **argv, ProgramOptions& options){
     int opt = 0;
 
     // 支持从环境变量指定 测试服务器
-    net_test_server = getenv("NET_TEST_SERVER");
-    if (!net_test_server) {
-        options.selected_server.append(net_test_server);
-    }
+    options.selected_server.append(getenv("NET_TEST_SERVER"));
 
     while ((opt = getopt_long(argc, (char **)argv, optStr, CmdLongOptions, &long_index )) != -1) {
         switch (opt){
