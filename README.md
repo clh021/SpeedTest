@@ -47,6 +47,12 @@ $ cmake -DCMAKE_BUILD_TYPE=Release .
 $ sudo make install
 ```
 
+### Server Download From
+https://support.ookla.com/hc/en-us/articles/234578528
+
+Manual Installation
+https://install.speedtest.net/ooklaserver/stable/OoklaServer.tgz
+
 ### On OpenSuse
 
 ```
