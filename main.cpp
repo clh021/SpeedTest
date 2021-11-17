@@ -216,39 +216,37 @@ int main(const int argc, const char **argv) {
         std::cout << downloadConfig.label << std::endl;
 
 
-    if (!programOptions.upload){
-        if (programOptions.output_type == OutputType::verbose){
-            std::cout << std::endl;
-            std::cout << "Testing download speed (" << downloadConfig.concurrency << ") "  << std::flush;
-        }
+    double downloadSpeed = 0;
+    if (programOptions.output_type == OutputType::verbose){
+	    std::cout << std::endl;
+	    std::cout << "Testing download speed (" << downloadConfig.concurrency << ") "  << std::flush;
+    }
 
-        double downloadSpeed = 0;
-        if (sp.downloadSpeed(serverInfo, downloadConfig, downloadSpeed, [&programOptions](bool success){
-            if (programOptions.output_type == OutputType::verbose)
-                std::cout << (success ? '.' : '*') << std::flush;
-        })){
-            if (programOptions.output_type == OutputType::verbose){
-                std::cout << std::endl;
-                std::cout << "Download: ";
-                std::cout << std::fixed;
-                std::cout << std::setprecision(2);
-                std::cout << downloadSpeed << " Mbit/s" << std::endl;
-            } else if (programOptions.output_type == OutputType::text) {
-                std::cout << "DOWNLOAD_SPEED=";
-                std::cout << std::fixed;
-                std::cout << std::setprecision(2);
-                std::cout << downloadSpeed << std::endl;
-            } else if (programOptions.output_type == OutputType::json) {
-                std::cout << "\"download\":\"";
-                std::cout << std::fixed;
-                std::cout << (downloadSpeed*1000*1000) << "\",";
-            }
-        } else {
-            std::cerr << "Download test failed." << std::endl;
-            if (programOptions.output_type == OutputType::json)
-                std::cout << "\"error\":\"download test failed\"}" << std::endl;
-            return EXIT_FAILURE;
-        }
+    if (sp.downloadSpeed(serverInfo, downloadConfig, downloadSpeed, [&programOptions](bool success){
+			    if (programOptions.output_type == OutputType::verbose)
+			    std::cout << (success ? '.' : '*') << std::flush;
+			    })){
+	    if (programOptions.output_type == OutputType::verbose){
+		    std::cout << std::endl;
+		    std::cout << "Download: ";
+		    std::cout << std::fixed;
+		    std::cout << std::setprecision(2);
+		    std::cout << downloadSpeed << " Mbit/s" << std::endl;
+	    } else if (programOptions.output_type == OutputType::text) {
+		    std::cout << "DOWNLOAD_SPEED=";
+		    std::cout << std::fixed;
+		    std::cout << std::setprecision(2);
+		    std::cout << downloadSpeed << std::endl;
+	    } else if (programOptions.output_type == OutputType::json) {
+		    std::cout << "\"download\":\"";
+		    std::cout << std::fixed;
+		    std::cout << (downloadSpeed*1000*1000) << "\",";
+	    }
+    } else {
+	    std::cerr << "Download test failed." << std::endl;
+	    if (programOptions.output_type == OutputType::json)
+		    std::cout << "\"error\":\"download test failed\"}" << std::endl;
+	    return EXIT_FAILURE;
     }
 
     if (programOptions.download) {
@@ -289,19 +287,11 @@ int main(const int argc, const char **argv) {
         return EXIT_FAILURE;
     }
 
-
-    if (programOptions.share){
-        std::string share_it;
-        if (sp.share(serverInfo, share_it)) {
-            if (programOptions.output_type == OutputType::verbose) {
-                std::cout << "Results image: " << share_it << std::endl;
-            } else if (programOptions.output_type == OutputType::text) {
-                std::cout << "IMAGE_URL=" << share_it << std::endl;
-            } else if (programOptions.output_type == OutputType::json) {
-                std::cout << "\"share\":\"" << share_it << "\",";
-            }
-        }
+    if (programOptions.output_type == OutputType::verbose) {
+            std::cout << "Network bench score: ";
+            std::cout << downloadSpeed + uploadSpeed  << std::endl;
     }
+
 
     if (programOptions.output_type == OutputType::json)
         std::cout << "\"_\":\"all ok\"}" << std::endl;
